@@ -1,0 +1,172 @@
+{% extends "bloglayout.tmpl" %}
+
+{% block Head %}
+ <script type="text/javascript" src="/ueditor.config.js"></script>
+<script type="text/javascript" src="/ueditor.all.js"></script>
+<script type="text/javascript" src="/lang/zh-cn/zh-cn.js"></script>
+<link href="/themes/default/css/ueditor.css" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block HtmlContent %}
+
+
+<div class="jumbotron">
+<div style="margin-left:5%">
+<div class="container" id="editcont">
+    <form id="editform" method="post"  role="form">
+    	<h4 class="form-group">博客标题</h4>
+        <div class="form-group">
+            <input type="text" class="form-control" name="blogname" id="blogname" style="width:880px;height:30px;" required />
+        </div>
+        <h4 class="form-group" >选择类别</h4>
+        <div class="form-group">
+            <select id="tagselector" class="form-control" name="tagid"></select>
+        </div>
+        <br>
+    	<br>
+    	<!-- 加载编辑器的容器 -->
+        <script id="container" name="content" type="text/plain" class="form-group" style="height:500px">
+            这里写你的博客内容
+        </script>
+    	<br>
+        <input  id="pushbtn" class="btn btn-info" role='button' type= "submit">
+    </form>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block Scripts %}
+<!-- 实例化编辑器 -->
+    <script type="text/javascript">
+        var editor = new baidu.editor.ui.Editor();
+        editor.render("container");  
+
+        //var editor = UE.getEditor('container');
+        //window.editor= editor;
+        var tagresult2;
+        var pushbtn = document.getElementById("pushbtn");
+        editor.ready(function()
+        {
+          loadblogifexist();
+        });
+
+        function loadblogifexist(){
+            loadtag();
+            {% if blogid %}
+                {% if findresult %}
+                    var blogname = document.getElementById("blogname");
+                    blogname.value = '{{sourceblog.BlogName}}';
+                    blogname.text = '{{sourceblog.BlogName}}';
+                    var options = $('.tagoption');
+                    var tagname = '{{sourceblog.Tag}}';
+                   
+                    for (var i=0; i < options.length; i++){
+
+                        if (tagname == tagresult2[i].tagname){
+                            //alert(options[i].value);
+                            options[i].selected = true;
+                            break;
+                        }
+                    }
+                    editor.setContent(`{{sourceblog.Content | safe}}`);
+                    //pushbtn.onclick = update;
+                    var editform = document.getElementById("editform");
+                    editform.action = "/edit/updatecontent/{{blogid}}";
+                    return;
+                {% else %}
+                      var alertdiv = document.createElement("div");
+                      alertdiv.className= "alert alert-warning alert-dismissible fade in";
+                      alertdiv.attributes["role"] = "alert"; 
+                      alertdiv.innerHTML = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>该文章已被删除，您可以重写一篇";
+                      var editcont = document.getElementById('editcont');
+                      editcont.appendChild(alertdiv);
+                      setTimeout(function(){$('editcont').removeChild(alertdiv)},3000);
+                {% endif %}
+            {% endif %}
+            var editform = document.getElementById("editform");
+            editform.action = "/edit/submitcontent";
+        }
+
+        function loadtag(){
+            $.ajax({
+                type: "get",
+                url: "/tags",
+                async: false,
+                data : {},
+                success: function (data, status){
+                        tagresult2 = $.parseJSON(data);
+                        if(!tagresult2){
+                            alert(tagresult2);
+                        }
+                        else{
+                            if (tagresult2.length==0){
+                                alert("获取tag失败！");
+                            }else{
+                                var tagselector = document.getElementById("tagselector");
+                                for (var i=0; i < tagresult2.length; i++) {
+                                    var option = document.createElement("option");
+                                    option.innerHTML= tagresult2[i].tagname+"("+ tagresult2[i].tagdesc +")";
+                                    option.className="tagoption";
+                                    option.value= tagresult2[i].tagid;
+                                    tagselector.appendChild(option);
+                                    tagselector.selectedIndex = 0;
+                                  }
+                                return;
+                            }
+                        }               
+                },
+                error: function () { alert("获取tag失败！"); }
+            });
+        }
+
+        function update(){
+            var blogname = document.getElementById("blogname").value;
+            var tagid = document.getElementById("tagselector").value;
+            var content = editor.getContent();
+            //alert(content);
+            $.ajax({
+                type: "post",
+                url: "/edit/updatecontent",
+                async: false,
+                contentType: "application/json", 
+                //contentType: "application/x-www-form-urlencoded",
+                data : JSON.stringify({
+                    BlogId: '{{blogid}}',
+                    BlogName: blogname,
+                    Content: content,
+                    Tagid: tagid,
+                }),
+                success: function(){
+                    window.location.href = "/blog/{{blogid}}";
+                },
+                error: function (data, status) { alert(data.responseText); }
+            });
+        }
+
+        function submit(){
+            var blogname = document.getElementById("blogname").value;
+            var tagid = document.getElementById("tagselector").value;
+            var content = editor.getContent();
+            //alert(content);
+            $.ajax({
+                type: "post",
+                url: "/edit/submitcontent",
+                async: false,
+                contentType: "application/json", 
+                //contentType: "application/x-www-form-urlencoded",
+                data : JSON.stringify({
+                    BlogName: blogname,
+                    Content: content,
+                    Tagid: tagid,
+                }),
+                success: function(data){
+                    //window.data = data;
+                    //alert(data.responseText);
+                    window.location.href = "/";
+                },
+                error: function (data, status) { alert(data.responseText); }
+            });
+        }
+    </script>
+{% endblock %}

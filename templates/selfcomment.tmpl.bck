@@ -1,0 +1,119 @@
+<script>
+		var end =false;
+		var page = 0;
+		function loadcomment()
+		{
+			$.ajax({
+			type: "get",
+			url: "/getcomments/"+{{$.Blogid}},
+			async: false,
+			data : {
+				page: page+1,
+			},
+			success: function (data, status){
+					var result2 = $.parseJSON(data);
+					if(!result2){
+						end=true;
+					}
+					else{
+						if (result2.length==0){
+							end=true;
+						}else{
+							updatecontainer(result2);
+							return;
+						}
+					}
+					updatecontainerend();					
+				},
+				error: function () { alert("获取失败！"); }
+			});
+		}
+		
+		function updatecontainerend(){
+		var blogs = document.getElementById("commentlist");
+		var div1 = document.createElement("div"); 
+		div1.className = 'col-sm-12 col-md-12 col-lg-12'; 
+		div1.style.height='250px';
+		div1.style.textAlign="center";
+		var div2 =document.createElement("div");
+		div2.className="alert alert-info";
+		div2.textContent= "所有评论都在这儿啦！( ⊙ ▽ ⊙ )";
+		div1.appendChild(div2);
+		blogs.appendChild(div1);
+		div1.id="bloglistend";
+		//$("bloglistend").fadeIn(300);
+		$("bloglistend").fadeOut(300);
+		//blogs.removeChild(div1);
+	}
+	
+	function updatecontainer (result2){
+		var blogs = document.getElementById("commentlist");
+		//alert(result2[2].BlogId);
+		
+		for (var i=0; i<result2.length;i++)
+			{
+			var div1 = document.createElement("div"); 
+		div1.className = 'col-sm-12 col-md-12 col-lg-12'; 
+		div1.style.height='250px';
+		var div2 = document.createElement("div"); 
+		div2.style.height='35%';
+		div2.style.overflow='hidden';
+		var h2 = document.createElement("h2"); 
+		h2.textContent = result2[i].SuperId;
+		var div3 = document.createElement("div");
+		var small1 = document.createElement("small");
+		small1.style.float = 'left';
+		small1.textContent= result2[i].CommenterName;
+		var small2 = document.createElement("small");
+		small2.style.float = 'left';
+		small2.textContent= result2[i].CmtTime;
+		var div4=  document.createElement("div");
+		div4.style.height='35%';
+		div4.style.overflow='hidden';
+		div4.innerHTML = result2[i].Content;
+		var p = document.createElement("p");
+		
+		var replyurl = '/blog/'+{{$.Blogid}}+'/'+result2[i].CommentId
+		p.innerHTML= "<a class='btn btn-primary' style='float:right' href='"+"#"+"' role='button'>回复 »</a>";
+		
+		div1.appendChild(div2);
+		div2.appendChild(h2);
+		div2.appendChild(div3);
+		div3.appendChild(small1);
+		div3.appendChild(small2);
+		div1.appendChild(div4);
+		div1.appendChild(p);
+		
+		blogs.appendChild(div1); 
+			}
+		page ++;
+	}
+	
+		function backtohead() {
+		    window.scrollTo(0, 0);
+		}
+		window.onscroll = function() {
+		
+		    //变量t就是滚动条滚动时，到顶部的距离
+		    var t = document.documentElement.scrollTop || document.body.scrollTop;
+		    var sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+		    var ch = document.documentElement.clientHeight || document.body.clientHeight;
+			var fh = document.getElementById("footer").clientHeight;
+		    var backdiv = document.getElementById("backdiv");
+		    if (t >= 100) { //当拖动到距离顶部100px处时
+		        backdiv.style.display = "block";
+		    } else {
+		        backdiv.style.display = "none";
+		    }
+		     if ((sh-t-ch) <= fh){
+				if (!end){
+					loadcomment();
+				}
+				else{
+					return;
+				}
+			}
+		}
+		
+		window.onload=loadcomment;
+	</script>

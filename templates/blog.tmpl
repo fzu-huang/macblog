@@ -1,0 +1,42 @@
+{% extends "bloglayout.tmpl" %}
+	
+	
+{% block HtmlContent %}
+<div class="container">
+ 	<div id="btext" class="btext">
+		<br>
+		<br>
+		<br>
+ 		<p><big>{{OnDetailBlog.BlogName}}</big></p> 
+		<br>
+		<p>{{OnDetailBlog.WriterName}}</p>
+		<br>
+		<p>发表时间：{{OnDetailBlog.Submittime}}</p>
+		<br>
+		<p>上次更新：{{OnDetailBlog.Updatetime}}</p>
+		<br>
+		<p>类别：{{OnDetailBlog.Tag}}</p>
+		<br>
+		{{OnDetailBlog.Content | safe}}
+	</div>
+	
+	<div id="ctext" class="ctext">
+		<!-- 多说评论框 start -->
+			<div class="ds-thread" data-thread-key="{{Blogid}}" data-title="{{OnDetailBlog.BlogName}}" data-url='window.location.host+"/blog/{{Blogid}}"'></div>
+		<!-- 多说评论框 end -->
+		<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+		<script type="text/javascript">
+		var duoshuoQuery = {short_name:"fzuhuang"};
+			(function() {
+				var ds = document.createElement('script');
+				ds.type = 'text/javascript';ds.async = true;
+				ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+				ds.charset = 'UTF-8';
+				(document.getElementsByTagName('head')[0] 
+				 || document.getElementsByTagName('body')[0]).appendChild(ds);
+			})();
+			</script>
+		<!-- 多说公共JS代码 end -->
+	</div>
+</div>
+{% endblock %}

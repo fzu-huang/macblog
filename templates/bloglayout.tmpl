@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  <title>{{AppName}}巴尔坦星</title>
+  <link rel="stylesheet" type="text/css" href= "/css/bootstrap.min.css">
+ <script type="text/javascript" src="/iscroll.js"></script>
+
+{% block Head %}{% endblock %}
+</head>
+
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a id="prjid" class="navbar-brand" href="/">巴尔坦星</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <div  class="navbar-form navbar-right">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control">
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-success btn-flat">Go!</button>
+                    </span>
+             </div>
+			{% if  LogStatus %}
+			<button type="button" class="btn btn-success" onclick="onclicksub()">Edit</button>
+			<button type="button" class="btn btn-success" onclick="signout()">Sign out</button>
+			{% endif %}
+	   </div>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+	
+	{% block HtmlContent %}{% endblock %}
+	
+	</div>	
+		<div id ="backdiv" onclick="backtohead()" style="display:none;">
+   			<button type="button" class="navbar navbar-default navbar-fixed-bottom"  style= "margin-left:85%; margin-bottom:5%; border:1px solid #055; -moz-border-radius: 15px;   -webkit-border-radius: 15px;" >
+  				<span class="glyphicon glyphicon glyphicon glyphicon-eject"  >{{i18n.Tr("backtohead")}}</span>
+			</button>
+		</div>
+	</div>
+	
+	<footer id ="footer" class="bs-docs-footer" role="contentinfo" >
+		<div  style="margin-bottom:0px;background-color: rgb(238, 238, 238); ">
+    		<div class="container">
+       	 <p>
+            		设计与制作:@<a href="#" target="_blank">Monster</a>.
+        	</p>
+	        <ul >
+	            <li>
+	                <a href="http://expo.bootcss.com">
+	                    优站精选
+	                </a>
+	            </li>
+	            <li>
+	                <a href="http://blog.getbootstrap.com">
+	                    官方博客
+	                </a>
+	            </li>
+	            <li>
+	                <a href="https://github.com/twbs/bootstrap/issues">
+	                    Issues
+	                </a>
+	            </li>
+	            <li>
+	                <a href="https://github.com/twbs/bootstrap/releases">
+	                    历史版本
+	                </a>
+	            </li>
+	        </ul>
+    		</div>
+		</div>
+	</footer>
+</body>
+	
+<script language="JavaScript" src="/third-party/jquery-1.10.2.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script>
+	var thisURL;
+	function onclicksub(){
+		window.location.href="/edit";
+	}
+	
+	function signout(){
+		$.ajax({
+			type: "get",
+			url: "/logout",
+			async: false,
+			success: function (data, status){
+					window.location.href = window.location.pathname;
+			},
+			error: function () { alert("注销出错！！"); }
+		});
+	}
+	function backtohead() {
+		window.scrollTo(0, 0);
+	}
+</script>
+{% block Scripts %}{% endblock %}
+</html>

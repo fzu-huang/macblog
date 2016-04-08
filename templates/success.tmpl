@@ -1,0 +1,13 @@
+{% extends "bloglayout.tmpl" %}
+
+{% block HtmlContent %}
+<div class="jumbotron">
+  <h3>submit blog Success</h3>
+  <p>{{blogname}}</p> 
+  <br>
+  <p>{{writername}}</p>
+  <br>
+	{{content | safe}}
+</div>
+
+{% endblock %}

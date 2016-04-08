@@ -1,0 +1,20 @@
+{
+    "imageUrl": "http://localhost:4001/edit/upload?action=uploadimage",//这个似乎没用
+	"imageActionName": "uploadimage",
+	"imageUrlPrefix": "http://localhost:4001",
+    "imagePath": "/upload/image",
+    "imageFieldName": "upfile",
+    "imageMaxSize": 2048000,
+	"imageCompressEnable": true, 
+    "imageAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
+	
+	
+	/* 涂鸦图片上传配置项 */
+    "scrawlActionName": "uploadscrawl", /* 执行上传涂鸦的action名称 */
+    "scrawlFieldName": "upfile", /* 提交的图片表单名称 */
+	   "scrawlPath": "/upload/scrawl",
+  /*"scrawlPathFormat": "/public/upload/scraw/{yyyy}{mm}{dd}/{time}{rand:6}", 上传保存路径,可以自定义保存路径和文件名格式 */
+    "scrawlMaxSize": 2048000, /* 上传大小限制，单位B */
+    "scrawlUrlPrefix": "http://localhost:4001", /* 图片访问路径前缀 */
+    "scrawlInsertAlign": "none"
+}

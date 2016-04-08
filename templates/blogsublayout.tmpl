@@ -1,0 +1,168 @@
+{% extends "bloglayout.tmpl" %}
+
+{% block HtmlContent %}
+
+{% block BlogHtmlContentHeader %}{% endblock %}
+
+<div class="container">
+<div class="row">
+{% block BlogHtmlContent %}{% endblock %}
+	<div class="col-md-3" style="float:right">
+	<div id="taglistcont" >
+		<p><big>分类目录</big></p>
+		<ul id="tagul"></ul>
+	</div>
+	<br>
+	<div id="timelistcont">
+		<p><big>日期归档</big></p>
+	</div>
+	</div>
+</div>
+</div>
+
+<div id="createtagdiv" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+		<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">创建新类目</h4>
+      </div>
+      <div class="modal-body">
+        <input id="createtagname" class="form-control" type="text" placeholder="类目名称">
+        <br>
+        <input id="createtagdesc" class="form-control" type="text" placeholder="类目描述(可空)">
+        <br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="createtag(this)">创建</button>
+        
+      </div>
+    </div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block Scripts %}
+<script type="text/javascript">
+	var tagul = document.getElementById("tagul");		
+	function getalltags(){
+		$.ajax({
+			type: "get",
+			url: "/tags",
+			async: false,
+			data : {},
+			success: function (data, status){
+					var result2 = $.parseJSON(data);
+					if(!result2){
+						alert(result2);
+					}
+					else{
+						if (result2.length==0){
+							updatetagcontwithnodata();
+						}else{
+							updatetagcont(result2);
+							return;
+						}
+					}				
+			},
+			error: function () { alert("获取tag失败！"); }
+		});
+	}
+
+	function updatetagcontwithnodata(){
+		tagul.innerHTML ="";
+		{% if LogStatus %}
+			appendcreatetagcont();
+		{% endif %}
+		var nolist = document.createElement("li");
+		nolist.innerHTML= "还没有创建任何类目";
+		tagul.appendChild(nolist);
+	}
+
+	function updatetagcont(result2){
+		tagul.innerHTML ="";
+		{% if LogStatus %}
+			appendcreatetagcont();
+		{% endif %}
+		for (var i=0; i<result2.length;i++){
+			var tagli = document.createElement("li");
+			tagli.style.marginBottom="2px";
+			//var taghref= documet.createElement("a");
+			tagli.innerHTML= "<a class=\"btn btn-info\" href='/blog/tag/"+result2[i].tagname+"' role='button'>"+result2[i].tagname+"</a>";
+			
+			tagul.appendChild(tagli);
+		}
+	}
+
+	function appendcreatetagcont(){
+		var tagli = document.createElement("li");
+		tagli.style.marginBottom="2px";
+		tagli.innerHTML= "<i class=\"btn btn-success\" role='button' data-toggle=\"modal\" data-target=\"#createtagdiv\"  >"+"创建类目"+"</i>";
+
+		tagul.appendChild(tagli);
+	}
+
+	function createtag(evt){
+		//$('#createtagdiv').html(tmpl('ctagtmpl'));
+		var input = document.getElementById("createtagname");
+	    var tagname = input.value;
+	    if (tagname == ""){
+	      var alertdiv = document.createElement("div");
+	      alertdiv.className= "alert alert-warning alert-dismissible fade in";
+	      alertdiv.attributes["role"] = "alert"; 
+	      alertdiv.innerHTML = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>类目名不可为空!";
+	      
+
+	      //evt.parentNode
+	      input.parentNode.appendChild(alertdiv);
+	      setTimeout(function(){input.parentNode.removeChild(alertdiv)},1000);
+	      //$('#rnamealert').alert('close');
+	    } else {
+	    	tagdesc = document.getElementById("createtagdesc").value;
+	    	$.ajax({
+		      type: "post",
+		      url: "/tags/create",
+		      async: false,
+		      contentType: "application/json", 
+		      //contentType: "application/x-www-form-urlencoded",
+		      data : JSON.stringify({
+				tagname: tagname,
+				tagdesc: tagdesc,
+			  }),
+		      traditional: true,
+		      success: function (data, status){
+		          if (status=="success"){
+		            $('#createtagdiv').modal('hide');
+		            getalltags();
+		            return;
+		          } else {
+		            var alertdiv = document.createElement("div");
+		            alertdiv.className= "alert alert-warning alert-dismissible fade in";
+		            alertdiv.attributes["role"] = "alert"; 
+		            alertdiv.innerHTML = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>"+data.responseText;
+		            
+		            input.parentNode.appendChild(alertdiv);
+		            setTimeout(function(){input.parentNode.removeChild(alertdiv)},3000);
+		          }
+		        },
+		      error: function (data, status){
+		      		//alert(data);
+		            var alertdiv = document.createElement("div");
+		            alertdiv.className= "alert alert-warning alert-dismissible fade in";
+		            alertdiv.attributes["role"] = "alert"; 
+		            alertdiv.innerHTML = "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>"+data.responseText;
+		            
+		            input.parentNode.appendChild(alertdiv);
+		            setTimeout(function(){input.parentNode.removeChild(alertdiv)},3000);
+		        }
+		      });
+	    }
+	}
+
+	window.onload= getalltags();
+</script>
+{% block BlogScripts %}{% endblock %}
+{% endblock %}

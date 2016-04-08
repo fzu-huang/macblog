@@ -1,0 +1,159 @@
+{% extends "blogsublayout.tmpl" %}
+	
+{% block BlogHtmlContentHeader %}
+<div class="jumbotron">
+	 <div class="container">
+        <h1>{{i18n.Tr ("hello") }}, 欢迎来到巴尔坦星</h1>
+        <p>巴尔坦星是巴尔坦星人的故乡，在这里，传说中的巴尔坦星人Monster快乐的生活着，一直到那一天，奥特曼出现了——</p>
+	</div>
+</div>
+{% endblock %}
+
+{% block BlogHtmlContent %}
+	
+{% if Tagname %}
+	<p>{{Tagdesc}}</p>
+{% endif %}
+
+ <div class="col-md-9" >
+	<div id="bloglist" class="col-xs-12 col-sm-10" >
+	{% for onviewblog in OnViewBlogs %}
+	<div class="col-sm-6 col-md-4 col-lg-3 " style="height:250px; " >
+		<div style="height: 35% ; overflow:hidden;">
+    			<h2>{{onviewblog.BlogName}} </h2>
+			<div>
+				<small float:left>{{onviewblog.WriterName}}</small>
+				<small float:right>{{onviewblog.Submittime}}</small>
+			</div>
+		</div>
+		<div style="height: 35% ; overflow:hidden; ">{{onviewblog.Content |safe}}
+		</div>
+	
+		<p style="margin:10%;" ><a class="btn btn-primary" href="/blog/{{onviewblog.BlogId}}" role="button">{{i18n.Tr ("more")}} >></a></p>
+	</div>
+	{% endfor %}
+      </div>    
+		
+</div>	 
+
+{% endblock %}
+
+{% block BlogScripts %}
+	<script>
+	var end =false;
+	var page = 1;
+	var generatedCount = 0;
+	var tagname = '{{Tagname}}';
+	function pullUpAction () { 
+		$.ajax({
+			type: "get",
+			url: "/getmoreblogs",
+			async: false,
+			data : {
+				page: page+1,
+				tagname: tagname,
+			},
+			success: function (data, status){
+					var result2 = $.parseJSON(data);
+					if(!result2){
+						end=true;
+					}
+					else{
+						if (result2.length==0){
+							end=true;
+						}else{
+							updatecontainer(result2);
+							return;
+						}
+					}
+					updatecontainerend();					
+			},
+			error: function () { alert("获取失败！"); }
+		});
+	} 
+	function updatecontainerend(){
+		var blogs = document.getElementById("bloglist");
+		var div1 = document.createElement("div"); 
+		div1.className = 'col-sm-12 col-md-12 col-lg-12'; 
+		div1.style.height='250px';
+		div1.style.textAlign="center";
+		var div2 =document.createElement("div");
+		div2.className="alert alert-info";
+		div2.textContent= "所有文章都在这儿啦！( ⊙ o ⊙ )";
+		div1.appendChild(div2);
+		blogs.appendChild(div1);
+		div1.id="bloglistend";
+		//$("bloglistend").fadeIn(300);
+		$("bloglistend").fadeOut(300);
+		//blogs.removeChild(div1);
+	}
+	
+	function updatecontainer (result2){
+		var blogs = document.getElementById("bloglist");
+		//alert(result2[2].BlogId);
+		
+		for (var i=0; i<result2.length;i++)
+			{
+			var div1 = document.createElement("div"); 
+		div1.className = 'col-sm-6 col-md-4 col-lg-3'; 
+		div1.style.height='250px';
+		var div2 = document.createElement("div"); 
+		div2.style.height='35%';
+		div2.style.overflow='hidden';
+		var h2 = document.createElement("h2"); 
+		h2.textContent = result2[i].BlogName;
+		var div3 = document.createElement("div");
+		var small1 = document.createElement("small");
+		small1.style.float = 'left';
+		small1.textContent= result2[i].WriterName;
+		var small2 = document.createElement("small");
+		small2.style.float = 'left';
+		small2.textContent= result2[i].Submittime;
+		var div4=  document.createElement("div");
+		div4.style.height='35%';
+		div4.style.overflow='hidden';
+		div4.innerHTML = result2[i].Content;
+		var p = document.createElement("p");
+		p.style.margin= '10%';
+		var getmoreurl = '/blog/'+result2[i].BlogId
+		p.innerHTML= "<a class='btn btn-primary' href='"+getmoreurl+"' role='button'>查看更多 »</a>";
+		
+		div1.appendChild(div2);
+		div2.appendChild(h2);
+		div2.appendChild(div3);
+		div3.appendChild(small1);
+		div3.appendChild(small2);
+		div1.appendChild(div4);
+		div1.appendChild(p);
+		
+		blogs.appendChild(div1); 
+			}
+		page ++;
+	}
+
+
+	window.onscroll = function() {
+		
+		    //变量t就是滚动条滚动时，到顶部的距离
+		    var t = document.documentElement.scrollTop || document.body.scrollTop;
+		    var sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+		    var ch = document.documentElement.clientHeight || document.body.clientHeight;
+		   var fh = document.getElementById("footer").clientHeight;
+		    var backdiv = document.getElementById("backdiv");
+		    if (t >= 100) { //当拖动到距离顶部100px处时
+		        backdiv.style.display = "block";
+		      // document.getElementById("prjid").textContent =fh;
+		    } else {
+		        backdiv.style.display = "none";
+		    }
+		    if ((sh-t-ch) <= fh){
+				if (!end){
+					pullUpAction();
+				}
+				else{
+					return;
+				}
+			}
+		}
+	</script>
+{% endblock %}
