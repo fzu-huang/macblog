@@ -16,11 +16,11 @@
     <form id="editform" method="post"  role="form">
     	<h4 class="form-group">博客标题</h4>
         <div class="form-group">
-            <input type="text" class="form-control" name="blogname" id="blogname" style="width:880px;height:30px;" required />
+            <input type="text" class="form-control" name="blogname" id="blogname"  required />
         </div>
         <h4 class="form-group" >选择类别</h4>
         <div class="form-group">
-            <select id="tagselector" class="form-control" name="tagid"></select>
+            <select id="tagselector" class="form-control" name="tagid" style="overflow:hidden"></select>
         </div>
         <br>
     	<br>
@@ -108,6 +108,7 @@
                                     var option = document.createElement("option");
                                     option.innerHTML= tagresult2[i].tagname+"("+ tagresult2[i].tagdesc +")";
                                     option.className="tagoption";
+                                    option.style= "word-break:break-all";
                                     option.value= tagresult2[i].tagid;
                                     tagselector.appendChild(option);
                                     tagselector.selectedIndex = 0;
