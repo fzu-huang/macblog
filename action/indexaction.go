@@ -59,3 +59,18 @@ func Getmoreblogs(ctx *macaron.Context) {
 	return
 }
 
+func GetDateCounts(ctx *macaron.Context) {
+	ret,reason,result := ctl.Getalldatecounts()
+	if !ret {
+		ctx.Error(403, reason)
+		return
+	}
+	data, err := json.Marshal(result)
+	if err != nil {
+		ctx.Error(403, err.Error())
+		return
+	}
+
+	ctx.Write(data)
+	return
+}

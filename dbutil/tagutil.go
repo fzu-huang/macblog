@@ -14,7 +14,7 @@ func DBaddtag(tagname, tagdesc string) (bool, string){
 	tagname = template.HTMLEscapeString(tagname)
 	tagdesc = template.HTMLEscapeString(tagdesc)
 	
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("insert into itemtag (tagname,tagdescribe) values (?,?)")
@@ -32,7 +32,7 @@ func DBaddtag(tagname, tagdesc string) (bool, string){
 }
 
 func DBgetalltags() (bool, string, []model.OnViewTag) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 
 	checkErr(err)
 	defer db.Close()
@@ -71,7 +71,7 @@ func DBgetalltags() (bool, string, []model.OnViewTag) {
 
 
 func DBgetagbyname(tagname string )(bool, string, model.OnViewTag) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("select * from itemtag where tagname = ?")

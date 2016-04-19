@@ -10,8 +10,10 @@ import (
 
 var db *sql.DB
 
+var DBURL = `root:123@tcp(localhost:3306)/bbs?charset=utf8`
+
 func init() {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	fmt.Println(db)
 	checkErr(err)
 	db.SetMaxOpenConns(2000)
@@ -31,7 +33,7 @@ func DBLogCheck(loguser model.LogUser) (bool, model.UserStatus) {
 	username := template.HTMLEscapeString(loguser.Name)
 	password := template.HTMLEscapeString(loguser.Pwd)
 
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	rows, err := db.Query("SELECT usermsg.name, usermsg.sex, usermsg.authority FROM usermsg where usermsg.name=? and usermsg.password=?", username, password)
@@ -61,7 +63,7 @@ func DBRegCheck(reguser model.RegistUser) (bool, string) {
 		return false, "user  exist!!!"
 	}
 
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("insert into usermsg (name,password,sex,email,authority) values (?,?,?,?,?)")
@@ -76,7 +78,7 @@ func DBRegCheck(reguser model.RegistUser) (bool, string) {
 }
 
 func DBUserExitCheck(username string) bool {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	rows, err := db.Query("SELECT usermsg.name, usermsg.authority FROM usermsg where usermsg.name=?", username)

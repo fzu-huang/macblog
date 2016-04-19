@@ -12,13 +12,16 @@ import (
 func DBsubmitcontent(blogname, writername, content string, tagid int) (bool, string) {
 	blogname = template.HTMLEscapeString(blogname)
 	writername = template.HTMLEscapeString(writername)
-	submittime := time.Now().Format("2006-01-02 15:04:05")
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	nowtime := time.Now()
+	submittime := nowtime.Format("2006-01-02 15:04:05")
+	year := nowtime.Year()
+	month := nowtime.Month().String()
+	db, err := sql.Open("mysql",DBURL)
 	checkErr(err)
 	defer db.Close()
-	stmt, err := db.Prepare("insert into blog (blogname,writername,content,submittime,updatetime,tagid) values (?,?,?,?,?,?)")
+	stmt, err := db.Prepare("insert into blog (blogname,writername,content,submittime,updatetime,tagid,month,year) values (?,?,?,?,?,?,?,?)")
 	checkErr(err)
-	result, err := stmt.Exec(blogname, writername, content, submittime, submittime,tagid)
+	result, err := stmt.Exec(blogname, writername, content, submittime, submittime,tagid,month,year)
 	checkErr(err)
 	if err != nil {
 		return false, err.Error()
@@ -30,7 +33,7 @@ func DBsubmitcontent(blogname, writername, content string, tagid int) (bool, str
 func DBupdatecontent(blogid string, blogname, content string,tagid int) (bool, string) {
 	blogname = template.HTMLEscapeString(blogname)
 
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("update  blog set blogname=?, content=?, tagid=? where id=?")
@@ -45,7 +48,7 @@ func DBupdatecontent(blogid string, blogname, content string,tagid int) (bool, s
 }
 
 func DBdeletecontent(blogid string) (bool, string) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("delete  blog where id=?")
@@ -60,7 +63,7 @@ func DBdeletecontent(blogid string) (bool, string) {
 }
 
 func DBgetcontentbyid(blogid string) (bool, string, model.OnDetailBlog) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("select blogname, writername, content, submittime, updatetime, id,itemtag.tagname from blog LEFT JOIN itemtag on itemtag.tagid = blog.tagid where id=?")
@@ -86,7 +89,7 @@ func DBgetcontentbyid(blogid string) (bool, string, model.OnDetailBlog) {
 }
 
 func DBgetallcontentbylist(page int) (bool, string, []model.OnViewBlog) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 
 	checkErr(err)
 	defer db.Close()
@@ -128,7 +131,7 @@ func DBgetallcontentbylist(page int) (bool, string, []model.OnViewBlog) {
 }
 
 func DBgetallcontentbytagandlist(tagid int, page int) (bool, string, []model.OnViewBlog) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 
 	checkErr(err)
 	defer db.Close()
@@ -170,7 +173,7 @@ func DBgetallcontentbytagandlist(tagid int, page int) (bool, string, []model.OnV
 }
 
 func DBgetallcontentbytagnameandlist(tagname string, page int) (bool, string, []model.OnViewBlog) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 
 	checkErr(err)
 	defer db.Close()

@@ -43,3 +43,20 @@ func ListBlogByTagname(ctx *macaron.Context){
 	
 	ctx.HTML(200, "blogindex")
 }
+
+func ListBlogByDate(ctx *macaron.Context) {
+	year := ctx.Params("year")
+	month := ctx.Params("month")
+
+	
+	ret, reason, result := ctl.Getallblogsbydate(year,month,1)
+	if ret {
+		ctx.Data["Datedesc"] = year+"."+month
+		ctx.Data["OnViewBlogs"] = result
+	} else {
+		ctx.Error(403, reason)
+		return
+	}
+	
+	ctx.HTML(200, "blogindex")
+}

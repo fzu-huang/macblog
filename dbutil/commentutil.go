@@ -12,7 +12,7 @@ import (
 func DBsubmitcomment(commenterid, blogid, superid, content string) (bool, string) {
 
 	cmttime := time.Now().Format("2006-01-02 15:04:05")
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("insert into comment (commenterid,blogid,superid,content,cmttime) values (?,?,?,?,?)")
@@ -27,7 +27,7 @@ func DBsubmitcomment(commenterid, blogid, superid, content string) (bool, string
 }
 
 func DBdeletecomment(commentid string) (bool, string) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("delete  comment where id=?")
@@ -42,7 +42,7 @@ func DBdeletecomment(commentid string) (bool, string) {
 }
 
 func DBgetcommentbyid(commentid string) (bool, string, model.OnDetailComment) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", DBURL)
 	checkErr(err)
 	defer db.Close()
 	stmt, err := db.Prepare("select comment.id, comment.superid, comment.content, comment.cmttime, usermsg.name, blog.blogname from comment left join usermsg on comment.commenterid=usermsg.id left join blog on comment.blogid=blog.id  where comment.id=?")
@@ -67,7 +67,7 @@ func DBgetcommentbyid(commentid string) (bool, string, model.OnDetailComment) {
 }
 
 func DBgetallcommentbylist(blogid string, page int) (bool, string, []model.OnDetailComment) {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/bbs?charset=utf8")
+	db, err := sql.Open("mysql", "DBURL")
 
 	checkErr(err)
 	defer db.Close()

@@ -53,3 +53,20 @@ type OnViewTag struct {
 	TagName string	`json:"tagname"`
 	TagDesc string	`json:"tagdesc"`
 }
+
+type DateBlogCount struct{
+	Year int		`json:"year,omitempty"`
+	Month string	`json:"month,omitempty"`
+	Count int		`json:"count,omitempty"`
+}
+
+type YearBlogCount struct{
+	Year int
+	MonthCount []MonthBlogCount
+	Count int
+}
+
+type MonthBlogCount struct{
+	Month string
+	Count int
+}

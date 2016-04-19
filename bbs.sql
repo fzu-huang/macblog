@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : hysql
+Source Server         : local
 Source Server Version : 50627
 Source Host           : localhost:3306
 Source Database       : bbs
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50627
 File Encoding         : 65001
 
-Date: 2016-04-08 18:59:38
+Date: 2016-04-20 00:39:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,17 +30,18 @@ CREATE TABLE `blog` (
   `month` varchar(255) NOT NULL,
   `year` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of blog
 -- ----------------------------
-INSERT INTO `blog` VALUES ('38', '朱阿姨', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博； ‘ &nbsp;; &#39; &quot; cfwe客内容\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-06 17:01:56', '2016-04-06 18:08:24', '9', '', '');
-INSERT INTO `blog` VALUES ('39', '朱阿姨', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博； ‘ &nbsp;; &#39; &quot; cfwe客内容gtrg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-06 17:33:31', '2016-04-06 18:38:07', '10', '', '');
-INSERT INTO `blog` VALUES ('40', '哈哈哈哈', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你“”的博客</p><p style=\"text-align:center\">fewfcewrweerfregwefwefdscewc</p><p>内容\r\n &nbsp; &nbsp; &nbsp; &nbsp;<br/></p>', 'huangyang', '2016-04-06 17:57:29', '2016-04-08 15:53:27', '1', '', '');
-INSERT INTO `blog` VALUES ('41', 'wef', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博客<img src=\"http://localhost:4001/upload/scrawl/562e2014-fbe3-11e5-8273-989096bbd3b2.png\" alt=\"562e2014-fbe3-11e5-8273-989096bbd3b2.png\"/>内容\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-06 18:35:54', '2016-04-06 18:35:54', '12', '', '');
-INSERT INTO `blog` VALUES ('42', 'dududu', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你<img src=\"http://localhost:4001/upload/scrawl/1fb53d28-fd5f-11e5-aa11-989096bbd3b2.png\" alt=\"1fb53d28-fd5f-11e5-aa11-989096bbd3b2.png\"/>的博客内容<img src=\"http://localhost:4001/upload/scrawl/127758a8-fd5f-11e5-aa11-989096bbd3b2.png\" alt=\"127758a8-fd5f-11e5-aa11-989096bbd3b2.png\"/>\r\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-08 15:54:10', '2016-04-08 15:54:31', '11', '', '');
-INSERT INTO `blog` VALUES ('43', 'testtime', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博客<img src=\"http://localhost:4001/upload/scrawl/0c5a5b18-fd74-11e5-a17c-989096bbd3b2.png\" alt=\"0c5a5b18-fd74-11e5-a17c-989096bbd3b2.png\"/>内容\r\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-08 18:24:18', '2016-04-08 18:24:18', '1', 'April', '2016年');
+INSERT INTO `blog` VALUES ('38', '朱阿姨', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博； ‘ &nbsp;; &#39; &quot; cfwe客内容\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-06 17:01:56', '2016-04-19 23:24:49', '9', 'April', '2016');
+INSERT INTO `blog` VALUES ('39', '朱阿姨', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博； ‘ &nbsp;; &#39; &quot; cfwe客内容gtrg &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2015-04-06 17:33:31', '2016-04-20 00:23:34', '10', 'April', '2015');
+INSERT INTO `blog` VALUES ('40', '哈哈哈哈', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你“”的博客</p><p style=\"text-align:center\">fewfcewrweerfregwefwefdscewc</p><p>内容\r\n &nbsp; &nbsp; &nbsp; &nbsp;<br/></p>', 'huangyang', '2016-06-06 17:57:29', '2016-04-20 00:23:52', '1', 'June', '2016');
+INSERT INTO `blog` VALUES ('41', 'wef', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博客<img src=\"http://localhost:4001/upload/scrawl/562e2014-fbe3-11e5-8273-989096bbd3b2.png\" alt=\"562e2014-fbe3-11e5-8273-989096bbd3b2.png\"/>内容\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-06 18:35:54', '2016-04-19 23:24:46', '12', 'April', '2016');
+INSERT INTO `blog` VALUES ('42', 'dududu', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你<img src=\"http://localhost:4001/upload/scrawl/1fb53d28-fd5f-11e5-aa11-989096bbd3b2.png\" alt=\"1fb53d28-fd5f-11e5-aa11-989096bbd3b2.png\"/>的博客内容<img src=\"http://localhost:4001/upload/scrawl/127758a8-fd5f-11e5-aa11-989096bbd3b2.png\" alt=\"127758a8-fd5f-11e5-aa11-989096bbd3b2.png\"/>\r\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-05-08 15:54:10', '2016-04-20 00:24:00', '11', 'May', '2016');
+INSERT INTO `blog` VALUES ('43', 'testtime', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博客<img src=\"http://localhost:4001/upload/scrawl/0c5a5b18-fd74-11e5-a17c-989096bbd3b2.png\" alt=\"0c5a5b18-fd74-11e5-a17c-989096bbd3b2.png\"/>内容\r\n &nbsp; &nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2015-04-08 18:24:18', '2016-04-20 00:24:06', '1', 'April', '2015');
+INSERT INTO `blog` VALUES ('44', 'wew', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里写你的博客内容\r\n &nbsp; w&nbsp; &nbsp; &nbsp;</p>', 'huangyang', '2016-04-19 23:24:23', '2016-04-19 23:24:23', '1', 'April', '2016');
 
 -- ----------------------------
 -- Table structure for `comment`

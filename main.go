@@ -80,6 +80,8 @@ func main() {
 		m.Get(`/blog/:blogid`, Blogdetail)
 		m.Get(`/getmoreblogs`, Getmoreblogs)
 		m.Get(`/getcomments/:blogid`, Commentinblog)
+		m.Get(`/datecounts`,GetDateCounts)
+		m.Get(`/date/:year/:month`,ListBlogByDate)
 		
 		m.Get(`/tags`,GetAllTags)
 		m.Post(`/tags/create`,CreateTag)

@@ -11,7 +11,11 @@
 
 {% block BlogHtmlContent %}
 	
+{% if Datedesc %}
+	<p>{{Datedesc}}</p>
+{% endif %}
 {% if Tagname %}
+	<p>{{Tagname}}</p>
 	<p>{{Tagdesc}}</p>
 {% endif %}
 
@@ -155,5 +159,6 @@
 				}
 			}
 		}
+	
 	</script>
 {% endblock %}

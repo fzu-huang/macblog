@@ -15,6 +15,7 @@
 	<br>
 	<div id="timelistcont">
 		<p><big>日期归档</big></p>
+		<ul id="datecountsul"></ul>
 	</div>
 	</div>
 </div>
@@ -48,6 +49,7 @@
 {% block Scripts %}
 <script type="text/javascript">
 	var tagul = document.getElementById("tagul");
+	var datecountsul = document.getElementById("datecountsul");
 	function getalltags(){
 		$.ajax({
 			type: "get",
@@ -94,8 +96,8 @@
 			tagli.innerHTML= "<a class=\"btn btn-info\" href='/blog/tag/"+result2[i].tagname+"' role='button'>"+result2[i].tagname+"</a>";
 			tagul.appendChild(tagli);
 		}
-		var tagcont = document.getElementById("taglistcont");
-		tagcont.appendChild(tagol);
+		//var tagcont = document.getElementById("taglistcont");
+		//tagcont.appendChild(tagol);
 	}
 	
 	function appendcreatetagcont(){
@@ -163,7 +165,55 @@
 	    }
 	}
 	
-	window.onload= getalltags();
+	function getdatecounts(){
+		$.ajax({
+			type: "get",
+			url: "/datecounts",
+			async: false,
+			success: function (data, status){
+					
+					var datecountresult = $.parseJSON(data);
+					if(!datecountresult){
+						updatedatecountwithoutdata();
+					}
+					else{
+						if (datecountresult.length==0){
+							updatedatecountwithoutdata();
+						}else{
+							
+							updatedatecountwithdata(datecountresult);
+							return;
+						}
+					}				
+			},
+			error: function () { updatedatecountwithoutdata(); }
+		});
+	}
+	
+	function updatedatecountwithoutdata(){
+		datecountsul.innerHTML ="";
+		var nolist = document.createElement("li");
+		nolist.innerHTML= "暂无日志或日期归档";
+		datecountsul.appendChild(nolist);
+	}
+	
+	function updatedatecountwithdata(datecountresult){
+		datecountsul.innerHTML ="";
+		for (var i=0; i<datecountresult.length;i++){
+			var datecountli = document.createElement("li");
+			datecountli.style.marginBottom="2px";
+			//var taghref= documet.createElement("a");
+			datecountli.innerHTML= "<a class=\"btn btn-info\" href='/date/"+datecountresult[i].year+"/"+datecountresult[i].month+"' role='button'>"+datecountresult[i].year+"."+datecountresult[i].month+"("+datecountresult[i].count+")"+"</a>";
+			datecountsul.appendChild(datecountli);
+		}
+		//var tagcont = document.getElementById("timelistcont");
+		//tagcont.appendChild(datecountsul);
+	}
+	
+	window.onload= function(){
+		getalltags();
+		getdatecounts();	
+	};
 </script>
 {% block BlogScripts %}{% endblock %}
 {% endblock %}
