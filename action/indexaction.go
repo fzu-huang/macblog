@@ -1,6 +1,7 @@
 package action
 
 import (
+	"fmt"
 	"encoding/json"
 	"github.com/Unknwon/macaron"
 	"github.com/fzu-huang/macblog/ctl"
@@ -10,15 +11,19 @@ import (
 )
 
 func BlogIndex(ctx *macaron.Context) {
+	
+	keyword := ctx.Req.FormValue("key")
+	
 
 	//should be   GetAllContentAbout 获取文章简要
-	getblogret, err, blogs := ctl.Getallcontent(1)
+	getblogret, err, blogs := ctl.Getallcontent(1,keyword)
 	if getblogret {
 		ctx.Data["OnViewBlogs"] = blogs
 	} else {
 		ctx.Error(403, err)
 		return
 	}
+	fmt.Println(blogs)
 	ctx.Data["Tagname"] = ""
 	ctx.HTML(200, "blogindex")
 }
@@ -31,6 +36,7 @@ func Getmoreblogs(ctx *macaron.Context) {
 	}
 	
 	tagname :=ctx.Req.FormValue("tagname")
+	keyword := ctx.Req.FormValue("key")
 	//date := ctx.Req.FormValue("date")
 	var data []byte
 	if tagname != "" {
@@ -41,11 +47,12 @@ func Getmoreblogs(ctx *macaron.Context) {
 		}
 		data, err = json.Marshal(result)
 	} else{
-		ret, reason, result := ctl.Getallcontent(pageint)
+		ret, reason, result := ctl.Getallcontent(pageint,keyword)
 		if ret == false {
 			ctx.Error(403, reason)
 			return
 		}
+		fmt.Println(result)
 		data, err = json.Marshal(result)
 	}
 

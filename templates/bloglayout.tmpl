@@ -18,9 +18,9 @@
         <div id="navbar" class="navbar-collapse collapse">
           <div  class="navbar-form navbar-right">
             <div class="input-group input-group-sm">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" id= "searchkey">
                     <span class="input-group-btn">
-                      <button type="button" class="btn btn-success btn-flat">Go!</button>
+                      <button type="button" class="btn btn-success btn-flat" onclick="searchblogs()">Go!</button>
                     </span>
              </div>
 			{% if  LogStatus %}
@@ -41,7 +41,6 @@
 			</button>
 		</div>
 	</div>
-	
 	<footer id ="footer" class="bs-docs-footer" role="contentinfo" >
 		<div  style="margin-bottom:0px;background-color: rgb(238, 238, 238); ">
     		<div class="container">
@@ -94,6 +93,22 @@
 			error: function () { alert("注销出错！！"); }
 		});
 	}
+	
+	String.prototype.trim=function() {
+	    return this.replace(/(^\s*)|(\s*$)/g,'');
+	}
+	
+	function searchblogs() {
+		
+		var keystr = document.getElementById("searchkey").value.replace(/^\s+|\s+$/g,"");;
+		if (keystr === "") {
+			return;
+		}
+		window.location.href = "/blog?key="+keystr;
+	}
+	
+	
+	
 	function backtohead() {
 		window.scrollTo(0, 0);
 	}

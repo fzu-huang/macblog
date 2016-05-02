@@ -1,6 +1,7 @@
 package dbutil
 
 import (
+//	"strconv"
 	"database/sql"
 	"fmt"
 	"github.com/fzu-huang/macblog/model"
@@ -202,6 +203,61 @@ func DBgetallcontentbytagnameandlist(tagname string, page int) (bool, string, []
 				Content:    template.HTML(content),
 				Submittime: submittime,
 				Tag: tagname,
+			}
+		} else {
+			if i == 0 {
+				return true, "find no blog.", nil
+			}
+			viewblogs = viewblogs[:i]
+			break
+		}
+	}
+	return true, "", viewblogs
+}
+
+func DBgetallcontentbyselector(page int, keywords[] string) (bool, string, []model.OnViewBlog) {
+	db, err := sql.Open("mysql", DBURL)
+
+	checkErr(err)
+	defer db.Close()
+	countper := 9
+	limitindex := (page - 1) * countper
+	keylen := len(keywords)
+	selectorstr := ""
+	for i :=0;i<keylen;i++{
+		selectorstr+= ("%"+template.HTMLEscapeString(keywords[i]))
+	}
+	selectorstr+= "%"
+	mainkeyword := keywords[0]
+	searchstr := "where (blogname like '" +selectorstr+ "') or (content like '"+selectorstr+"') or (blogname like '%"+mainkeyword+"%' ) or (content like '%"+mainkeyword+"%' )"
+
+	fullstr := "select id, blogname, writername, content, submittime,itemtag.tagname from blog LEFT JOIN itemtag on itemtag.tagid = blog.tagid "+searchstr+ " order by submittime desc limit ?,?"
+	fmt.Println(fullstr)
+	stmt, err := db.Prepare(fullstr)
+	
+	checkErr(err)
+
+	raws, err := stmt.Query(limitindex,countper)
+	checkErr(err)
+	if err != nil {
+		return false, err.Error(), nil
+	}
+	var id, blogname, writername, content, submittime,tagname string
+
+	//var viewblogs  []model.OnViewBlog{}
+	viewblogs := make([]model.OnViewBlog, countper)
+	defer raws.Close()
+	for i := 0; i < 9; i++ {
+		if raws.Next() {
+			err = raws.Scan(&id, &blogname, &writername, &content, &submittime, &tagname)
+			checkErr(err)
+			viewblogs[i] = model.OnViewBlog{
+				BlogId:     id,
+				BlogName:   blogname,
+				WriterName: writername,
+				Content:    template.HTML(content),
+				Submittime: submittime,
+				Tag:tagname,
 			}
 		} else {
 			if i == 0 {

@@ -1,6 +1,7 @@
 package ctl
 
 import (
+	"strings"
 	//	"errors"
 	"github.com/fzu-huang/macblog/dbutil"
 	"github.com/fzu-huang/macblog/model"
@@ -16,7 +17,7 @@ func Updatecontent(blogid,blogname,  content string,tagid int) (bool, string) {
 	return dbutil.DBupdatecontent(blogid ,blogname,  content,tagid)
 }
 
-func Getallcontent(page int) (bool, string, []model.OnViewBlog) {
+func Getallcontent(page int,keyword string) (bool, string, []model.OnViewBlog) {
 	//	ok, err, blogs := dbutil.DBgetallcontentbylist(page)
 	//	if err != nil {
 	//		return err, nil
@@ -24,7 +25,16 @@ func Getallcontent(page int) (bool, string, []model.OnViewBlog) {
 	//	if blogs == nil {
 	//		return errors.New("find no blogs.", nil)
 	//	}
-
+	if keyword != "" {
+		keywords := strings.Split(keyword, " ")
+		realwords := []string{}
+		for _,v := range keywords{
+			if strings.TrimSpace(v) !="" {
+				realwords = append(realwords,v)
+			}
+		}
+		return dbutil.DBgetallcontentbyselector(page,realwords)
+	}
 	return dbutil.DBgetallcontentbylist(page)
 }
 

@@ -66,6 +66,7 @@ func main() {
 
 	m.Group("", func() {
 		m.Get(`/`, BlogIndex)
+		m.Get(`/blog`, BlogIndex)
 		m.Get("/edit", Edit)
 		m.Get("/edit/:blogid", Edit)
 		m.Get(`/login`, Log)
